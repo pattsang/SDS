@@ -1,0 +1,95 @@
+<!-- <mat-grid-list cols="2" >
+  <mat-grid-tile>Product Name</mat-grid-tile>
+  <mat-grid-tile>
+
+    <input matInput placeholder="product name" [(ngModel)]="data['productName']" name="productName"
+      value="data['productName']">
+
+  </mat-grid-tile>
+  <mat-grid-tile>Supplier</mat-grid-tile>
+  <mat-grid-tile>
+    <input matInput placeholder="supplier / manufacturer" [(ngModel)]="data['manufacturerName']" name="manufacturerName"
+      value="data['manufacturerName']">
+  </mat-grid-tile>
+</mat-grid-list> -->
+<mat-card>
+  <mat-card-title class="flex-center">Product Preview</mat-card-title>
+  <mat-card-content>
+    <form>
+      <mat-form-field class="fullWidth" *ngFor="let product of productDetail">
+        <input readonly="true" matInput placeholder="Product Name" [(ngModel)]="product.product_name" name="product_name">
+        <input readonly="true" *ngIf="internal === false" matInput placeholder="Product Name" [(ngModel)]="product_name" name="product_name">
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" *ngIf="!internal">
+          <input readonly="true" matInput placeholder="Product Name" [(ngModel)]="product_name" name="product_name">
+        </mat-form-field>
+
+      <mat-form-field class="fullWidth" *ngFor="let product of productDetail">
+        <input matInput  readonly="true" placeholder="Manufacturer" [(ngModel)]="product.mfg_detail"
+          name="mfg_detail">
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" *ngIf="!internal">
+          <input readonly="true" matInput placeholder="Manufacturer" [(ngModel)]="mfg_detail" name="mfg_detail">
+        </mat-form-field>
+
+      <mat-form-field class="fullWidth" *ngFor="let product of productDetail">
+        <input matInput *ngIf="product.product_code.length !== 0" readonly="true" placeholder="Product Code" [(ngModel)]="product.product_code"
+          name="product_code">
+          <input matInput *ngIf="product.product_code.length === 0" readonly="true" placeholder="Product Code" value="N/A">
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" *ngIf="!internal">
+          <input matInput readonly="true" placeholder="Product Code" [(ngModel)]="product_code_array" name="product_code_array">
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" *ngFor="let product of productDetail">
+        <input matInput *ngIf="product.cas_no.length !== 0" readonly="true" placeholder="Cas No." [(ngModel)]="product.cas_no"
+          name="cas_no">
+          <input matInput *ngIf="product.cas_no.length === 0" readonly="true" placeholder="Cas No." value="N/A">
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" *ngIf="!internal">
+          <input readonly="true" matInput placeholder="Cas No." [(ngModel)]="cas_no" name="cas_no">
+        </mat-form-field>
+
+      <mat-form-field class="fullWidth" *ngFor="let product of productDetail">
+        <input matInput *ngIf="product.productAlias.length !== 0" readonly="true" placeholder="Product Alias" [(ngModel)]="product.productAlias"
+          name="productAlias">
+          <input matInput *ngIf="product.productAlias.length === 0" readonly="true" placeholder="Product Alias" value="N/A">
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" *ngFor="let product of productDetail">
+        <input matInput *ngIf="product.additionalSuppliers.length !== 0" readonly="true" placeholder="Additional Supplier" [(ngModel)]="product.additionalSuppliers"
+          name="additionalSuppliers">
+          <input matInput *ngIf="product.additionalSuppliers.length === 0" readonly="true" placeholder="Additional Supplier" value="N/A">
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" *ngFor="let product of productDetail">
+        <input readonly="true" matInput placeholder="Health Hazard Class" [(ngModel)]="product.healthHazardClass" name="healthHazardClass">
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" *ngFor="let product of productDetail">
+        <input readonly="true" *ngIf="product.physicalHazardClass !== null" matInput placeholder="Physical Hazard Class" [(ngModel)]="product.physicalHazardClass" name="physicalHazardClass">
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" *ngIf="internal">
+        <input matInput  readonly="true" placeholder="WHMIS Exempt" [(ngModel)]="exempt" name="exempt" value="exempt">
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" *ngIf="!internal">
+          <input matInput readonly="true" placeholder="WHMIS Exempt" [(ngModel)]="exempt" name="exempt" value="exempt">
+        </mat-form-field>
+
+      <mat-card-actions *ngIf="loggedIn()"  class="fullWidth" style="display:flex; align-items:flex-end !important; margin-left: 5px; ">
+        <button mat-raised-button
+        (click)="openProductLabelGeneration(productId)">Print Label</button>
+        <button mat-raised-button *ngIf="internal" (click)="getSDSPDF()" ><a>View SDS</a></button>
+        <!-- <button mat-raised-button *ngIf="internal" (click)="getSDSPDF()" ><a target="_blank">View SDS</a></button> -->
+        <!-- <button mat-raised-button *ngIf="!internal" (click)="getCloudSDSPDF()" ><a target="_blank">View SDS</a></button> -->
+        <button mat-raised-button *ngIf="!internal" (click)="getCloudSDSPDF()" ><a>View SDS</a></button>
+      </mat-card-actions>
+    </form>
+  </mat-card-content>
+</mat-card>

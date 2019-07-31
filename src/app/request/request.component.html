@@ -1,0 +1,378 @@
+<!-- <section fxLayout fxLayoutAlign="center center">
+    <mat-card style="width: 65%;" fxLayout="column" fxLayoutAlign="center center">
+        <div mat-card-title>SDS Request</div>
+        <mat-card-content style="width:95%;">
+            <form [formGroup]="requestForm" (ngSubmit)="onFormSubmit(requestForm.value)" fxLayout="column"
+                fxLayoutAling="center center" style="width: 95%">
+                <div class="sub-title-bold">Product Information</div>
+                <mat-form-field >
+                    <input formControlName="supplierManufacturer" matInput placeholder="supplier manufacturer">
+                </mat-form-field>
+                <mat-form-field class="demo-full-width">
+                    <input formControlName="productName" matInput placeholder="product name">
+                </mat-form-field>
+                <mat-form-field class="demo-full-width">
+                    <input formControlName="catalogNumber" matInput placeholder="catalog number">
+                </mat-form-field>
+                <div class="sub-title-bold">Your Contact Information</div>
+                <mat-form-field class="demo-full-width">
+                    <input formControlName="fullName" matInput placeholder="Full Name">
+                </mat-form-field>
+                <mat-form-field class="demo-full-width">
+                    <input formControlName="emailAddress" matInput placeholder="email address" readonly>
+                </mat-form-field>
+                <mat-form-field class="demo-full-width">
+                    <input formControlName="phoneNumber" matInput placeholder="phone number">
+                </mat-form-field>
+                <mat-form-field class="demo-full-width">
+                    <input formControlName="healthAuthority" matInput placeholder="health authority">
+                </mat-form-field>
+                <mat-form-field class="demo-full-width">
+                    <input formControlName="department" matInput placeholder="department">
+                </mat-form-field>
+                <mat-card-actions fxLayout fxLayoutAlign="flex-end">
+                    <button mat-raised-button color="primary" (click)="openDiaglogRequest()">Submit</button>
+                </mat-card-actions>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</section> -->
+
+<section fxLayout fxLayoutAlign="center center">
+  <mat-card style="width: 65%;" fxLayout="column" fxLayoutAlign="center center">
+    <div mat-card-title>SDS Request</div>
+    <mat-card-content style="width:95%;">
+      <form
+        id="requestId"
+        #requestForm="ngForm"
+        [formGroup]="sdsRequestForm"
+        (submit)="processForm(requestForm)"
+      >
+        <h2>
+          Product Request
+        </h2>
+
+        <!-- <button
+          class="actions"
+          mat-raised-button
+          type="submit"
+          id="requestId"
+          (click)="submitButton()"
+          [disabled]="clicked > 4"
+          style="margin-bottom: 3%; margin-left: 80%;"
+        >
+          Click To Add
+        </button> -->
+        <button
+        class="actions" mat-raised-button type="button" id="requestId"
+        (click)="submitButton()" [disabled]="disableButton()"
+        style="margin-bottom: 3%; margin-left: 80%;">Click To Add</button>
+
+        <ng-template
+          ngFor
+          let-request
+          [ngForOf]="form.requests"
+          let-index="index"
+          let-isLast="last"
+        >
+          <!-- <div
+            class="request"
+            [class.request--invalid]="
+              nameControl.touched && nameControl.invalid
+            "
+          >
+            <mat-form-field style="margin-right:2%">
+              <input
+                #nameControl="ngModel"
+                matInput
+                type="text"
+                name="name_{{ request.id }}"
+                [(ngModel)]="request.productName"
+                required
+                autofocus
+                size="20"
+                placeholder="Product Name"
+              />
+            </mat-form-field> -->
+            <div
+            class="request"
+          >
+            <mat-form-field style="margin-right:2%">
+              <input
+                formControlName="productFormControl"
+                matInput
+                type="text"
+                name="name_{{ request.id }}"
+                [(ngModel)]="request.productName"
+                autofocus
+                size="20"
+                placeholder="Product Name"
+              />
+              <mat-error *ngIf="sdsRequestForm.get('productFormControl').hasError('required')">
+                  A product <strong>required</strong>
+                </mat-error>
+            </mat-form-field>
+
+            <!-- <mat-form-field style="margin-right:2%">
+              <input
+                type="text"
+                matInput
+                name="manufacturer_{{ request.id }}"
+                [(ngModel)]="request.manufacturer"
+                required
+                size="10"
+                placeholder="Manufacturer"
+              />
+            </mat-form-field>
+
+            <mat-form-field>
+              <input
+                type="text"
+                matInput
+                name="casNumber{{ request.id }}"
+                [(ngModel)]="request.casNumber"
+                required
+                size="10"
+                placeholder="Catalog number"
+              />
+            </mat-form-field> -->
+
+            <mat-form-field style="margin-right:2%">
+                <input
+                formControlName="manufacturerFormControl"
+                  type="text"
+                  matInput
+                  name="manufacturer_{{ request.id }}"
+                  [(ngModel)]="request.manufacturer"
+                  size="10"
+                  placeholder="Manufacturer"
+                />
+                <mat-error *ngIf="sdsRequestForm.get('manufacturerFormControl').hasError('required')">
+                    A manufacturer <strong>required</strong>
+                  </mat-error>
+              </mat-form-field>
+  
+              <mat-form-field>
+                <input
+                formControlName="casNoFormControl"
+                  type="text"
+                  matInput
+                  name="casNumber{{ request.id }}"
+                  [(ngModel)]="request.casNumber"
+                  size="10"
+                  placeholder="Catalog number"
+                />
+                <mat-error *ngIf="sdsRequestForm.get('casNoFormControl').hasError('required')">
+                    A catalog number <strong>required</strong>
+                  </mat-error>
+              </mat-form-field>
+
+            <a style="cursor: pointer;" (click)="removeProductRequest(index)"
+              title="Remove Product" class="remove">&times;
+            </a>
+          </div>
+        </ng-template>
+
+        <br />
+
+        <div class="sub-title-bold">Your Contact Information</div>
+
+        <mat-form-field class="fullWidth">
+            <input matInput maxlength="125" placeholder="Full Name" formControlName="fullNameFormControl">
+            <mat-error *ngIf="sdsRequestForm.get('fullNameFormControl').hasError('required')">
+                Full Name is <strong>required</strong>
+              </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="fullWidth">
+              <input matInput placeholder="Email Address" formControlName="emailFormControl">
+              <mat-error *ngIf="sdsRequestForm.get('emailFormControl').hasError('email') && sdsRequestForm.get('emailFormControl').hasError('pattern')">
+                Please enter a valid email address
+              </mat-error>
+              <mat-error *ngIf="sdsRequestForm.get('emailFormControl').hasError('required')">
+                Email is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+
+        <mat-form-field style="width: 30% !important">
+            <mat-label>Are you a health care worker?</mat-label>
+            <mat-select (selectionChange)="onSelectCareWorkerConfirmation($event)" [(value)]="selectedSearchParameter">
+              <mat-option value="Yes">Yes</mat-option>
+              <mat-option value="No">No</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="fullWidth">
+              <input maxlength="10" matInput placeholder="Phone Number" formControlName="phoneNumberFormControl">
+              <mat-error *ngIf="sdsRequestForm.get('phoneNumberFormControl').hasError('required')">
+                  Phone number is <strong>required</strong>
+                </mat-error>
+              <mat-error *ngIf="!sdsRequestForm.get('phoneNumberFormControl').hasError('required') && sdsRequestForm.get('phoneNumberFormControl').hasError('pattern')">
+                  Please enter valid phone number
+                 </mat-error>
+            </mat-form-field>
+
+            <!-- <mat-form-field style="width: 30% !important">
+                <mat-label>Health Authority/Region</mat-label>
+                <mat-select (selectionChange)="onSelectCareWorkerConfirmation($event)" [(value)]="selectedSearchParameter">
+                  <mat-option value="Yes">Yes</mat-option>
+                  <mat-option value="No">No</mat-option>
+                </mat-select>
+              </mat-form-field> -->
+<!-- 
+            <mat-form-field class="fullWidth">
+                <input matInput maxlength="100" placeholder="Health Authority/Region" matInput="healthAuthorityFormControl">
+                <mat-error *ngIf="sdsRequestForm.get('healthAuthorityFormControl').hasError('required')">
+                    Health Authority/Region is <strong>required</strong>
+                  </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="fullWidth">
+                  <input matInput readonly="true"  placeholder="Health Authority/Region" [(ngModel)]="userLocationName" formControlName="userLocationFormControl">
+                </mat-form-field> -->
+      
+                <mat-form-field class="fullWidth">
+                    <mat-select placeholder="Health Authority/Region" (selectionChange)="selectedHealthAuthorityLocation($event)" [(value)]="selectedHealthAuthority" required formControlName="userLocationFormControl"> 
+                      <mat-option *ngFor="let location of userTopLocation" [value]="location.authorityUnitId">
+                        {{location.locationName}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+
+                  <mat-form-field class="fullWidth" *ngIf="isSelectedTopAuth">
+                      <mat-select placeholder="Site" (selectionChange)="selectedLevel1Location($event)" [(value)]="selectedLevel1Authority" required formControlName="siteLocationFormControl"> 
+                        <mat-option *ngFor="let level1Location of userLevel1Loc" [value]="level1Location.locationId">
+                          {{level1Location.locationName}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="fullWidth" *ngIf="isSelectedLevel1 && level2HasChildren === 'true'">
+                        <mat-select placeholder="Facility" (selectionChange)="selectedLevel2Location($event)" [(value)]="selectedLevel2Authority" required formControlName="facilityFormControl"> 
+                          <mat-option *ngFor="let level2Location of userLevel2Loc" [value]="level2Location.locationId">
+                            {{level2Location.locationName}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+<!-- 
+                      <mat-form-field class="fullWidth" *ngIf="level1HasChildren === 'true'">
+                          <mat-select placeholder="Department" (selectionChange)="selectedLevel3Location($event)" [(value)]="selectedLevel3Authority" required formControlName="departmentFormControl"> 
+                            <mat-option *ngFor="let level3Location of userLevel3Loc" [value]="level3Location.locationId">
+                              {{level3Location.locationName}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field class="fullWidth" *ngIf="isSelectedLevel3">
+                            <mat-select placeholder="Sub-Department" (selectionChange)="selectedLevel4Location($event)" [(value)]="selectedLevel4Authority" required formControlName="subDepartmentLocationFormControl"> 
+                              <mat-option *ngFor="let level4Location of userLevel4Loc" [value]="level4Location.locationId">
+                                {{level4Location.locationName}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+
+                          <mat-form-field class="fullWidth" *ngIf="isSelectedLevel4">
+                              <mat-select placeholder="Floor" (selectionChange)="selectedLevel5Location($event)" [(value)]="selectedLevel5Authority" required formControlName="floorLocationFormControl"> 
+                                <mat-option *ngFor="let level5Location of userLevel4Loc" [value]="level5Location.locationId">
+                                  {{level5Location.locationName}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field> -->
+
+              <!-- <mat-form-field class="fullWidth">
+                  <input matInput maxlength="100" placeholder="Facility" formControlName="facilityFormControl">
+                  <mat-error *ngIf="sdsRequestForm.get('facilityFormControl').hasError('required')">
+                      Facility is <strong>required</strong>
+                    </mat-error>
+                </mat-form-field> -->
+
+                <!-- <mat-form-field class="fullWidth">
+                    <input matInput maxlength="100" placeholder="Department/Service" formControlName="departmentFormControl">
+                  </mat-form-field> -->
+              
+                  <mat-form-field class="fullWidth">
+                      <input matInput maxlength="100" placeholder="Address" formControlName="addressFormControl">
+                    </mat-form-field>
+                    <mat-form-field class="fullWidth">
+                        <input matInput maxlength="20" placeholder="City" formControlName="cityFormControl">
+                      </mat-form-field>
+                      <mat-form-field class="fullWidth">
+                          <input matInput maxlength="20" placeholder="Province/State" formControlName="provinceFormControl">
+                        </mat-form-field>
+
+                        <mat-form-field class="fullWidth">
+                            <input matInput maxlength="6" placeholder="Postal Code" formControlName="postalCodeFormControl">
+                          </mat-form-field>
+
+                          <mat-form-field class="fullWidth">
+                              <textarea maxlength="500" matInput placeholder="Comments" formControlName="commentFormControl"></textarea>
+                              <mat-error *ngIf="sdsRequestForm.get('commentFormControl').hasError('required')">
+                                  Message is <strong>required</strong>
+                                </mat-error>
+                            </mat-form-field>
+<!-- 
+        <mat-form-field class="fullWidth">
+          <input [(ngModel)]="phoneNumber" name="phoneNumber" matInput placeholder="Phone Number" required />
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth">
+          <input [(ngModel)]="healthAuthority" name="healthAuthority" matInput placeholder="Health Authority/Employer" required />
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth">
+          <input [(ngModel)]="facility" name="facility" matInput placeholder="Facility" required />
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth">
+          <input [(ngModel)]="department" name="department" matInput placeholder="Department" required />
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth">
+          <textarea [(ngModel)]="comment" name="comment" matInput placeholder="Comment"></textarea>
+        </mat-form-field> -->
+
+        <p>To request more products, please download the excel template:</p>
+        <a href="assets/requestForm/ProductRequestForm.xls" download>
+          <p>Please click here</p>
+        </a>
+
+        <p>
+          After filling out the excel document, please mail this to:
+          <a href="mailto:msdsrequest@gmail.com">msdsrequest@gmail.com</a>
+        </p>
+
+        <br />
+        <br />
+        <br />
+
+        <mat-card-actions fxLayout fxLayoutAlign="flex-end">
+            <button mat-raised-button type="button" [disabled]="sdsRequestForm.invalid" color="primary" (click)="sdsRequest()">Submit</button>
+            <button mat-raised-button type="button" color="warn" (click)="resetForm()">Clear</button>
+          </mat-card-actions>
+
+        <!-- <button
+          class="actions"
+          mat-raised-button
+          type="submit"
+          [disabled]="!requestForm.form.valid"
+          style="margin-bottom: 5%"
+          (click)="sdsRequest()"
+        >
+          Submit Request
+        </button> -->
+
+        <!-- <button
+        class="actions"
+        mat-raised-button
+        type="submit"
+        [disabled]="!requestForm.form.valid"
+        style="margin-bottom: 5%"
+      >
+        Submit Request
+      </button> -->
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</section>
