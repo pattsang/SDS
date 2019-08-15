@@ -1,3 +1,4 @@
+import { ForgotpasswordComponent } from './../forgotpassword/forgotpassword.component';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_service/auth.service';
 import { Router } from '@angular/router';
@@ -22,19 +23,7 @@ export class LoginComponent implements OnInit {
     private alertify: AlertifyService,
     private dialog: MatDialog,
     public fb: FormBuilder,
-  ) {
-    this.loginForm = fb.group({
-      passwordFormControl : new FormControl('', [
-        Validators.required,
-        Validators.maxLength(125)
-      ]),
-      emailFormControl : new FormControl('', [
-        Validators.required,
-        Validators.email,
-        Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
-      ])
-    });
-  }
+  ) {}
 
   ngOnInit() {
     if (localStorage.getItem('token') != null) {
@@ -69,5 +58,11 @@ export class LoginComponent implements OnInit {
   loggedInWindowsUser() {
     const token = localStorage.getItem('token');
     return !!token;
+  }
+
+  openForgotPasswordWindow() {
+    const dialogRef = this.dialog.open(ForgotpasswordComponent, {
+      width: '500px'
+    });
   }
 }

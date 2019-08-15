@@ -2,6 +2,7 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { AuthService } from '../_service/auth.service';
 import { Router } from '@angular/router';
 import { AlertifyService } from '../_service/alertify.service';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'forgotpassword',
@@ -15,7 +16,8 @@ export class ForgotpasswordComponent implements OnInit {
   
   constructor(private authService: AuthService,
     private router: Router,
-     private alertify: AlertifyService) { }
+     private alertify: AlertifyService,
+     private dialog: MatDialog) { }
 
   ngOnInit() {
   }
@@ -24,7 +26,7 @@ export class ForgotpasswordComponent implements OnInit {
     return this.authService.forgotPassword(this.model).subscribe(
       data => {
         this.alertify.success('Check your email for the password link');
-        this.router.navigate(['/login']);
+        this.dialog.closeAll();
       },
       error => {
         this.alertify.error('Something went wrong!');
@@ -32,7 +34,7 @@ export class ForgotpasswordComponent implements OnInit {
     );
   }
 
-  cancel(){
+  cancel() {
     this.cancelRegister.emit(false);
     this.router.navigate(['/login']);
   }
